@@ -20,42 +20,45 @@ class BehaviorOphysNwbApi(NwbApi):
             file_create_date=datetime.datetime.now()
         )
 
-        # Add stimulus_timestamps to NWB in-memory object:
-        nwb.add_stimulus_timestamps(nwbfile, session_object.stimulus_timestamps)
+        # # Add stimulus_timestamps to NWB in-memory object:
+        # nwb.add_stimulus_timestamps(nwbfile, session_object.stimulus_timestamps)
 
-        # Add running data to NWB in-memory object:
-        unit_dict = {'v_sig': 'V', 'v_in': 'V', 'speed': 'cm/s', 'timestamps': 's', 'dx': 'cm'}
-        nwb.add_running_data_df_to_nwbfile(nwbfile, session_object.running_data_df, unit_dict)
+        # # Add running data to NWB in-memory object:
+        # unit_dict = {'v_sig': 'V', 'v_in': 'V', 'speed': 'cm/s', 'timestamps': 's', 'dx': 'cm'}
+        # nwb.add_running_data_df_to_nwbfile(nwbfile, session_object.running_data_df, unit_dict)
 
-        # Add ophys to NWB in-memory object:
-        nwb.add_ophys_timestamps(nwbfile, session_object.ophys_timestamps)
+        # # Add ophys to NWB in-memory object:
+        # nwb.add_ophys_timestamps(nwbfile, session_object.ophys_timestamps)
 
-        # Add stimulus template data to NWB in-memory object:
-        for name, image_data in session_object.stimulus_templates.items():
-            nwb.add_stimulus_template(nwbfile, image_data, name)
+        # # Add stimulus template data to NWB in-memory object:
+        # for name, image_data in session_object.stimulus_templates.items():
+        #     nwb.add_stimulus_template(nwbfile, image_data, name)
 
-            # Add index for this template to NWB in-memory object:
-            nwb_template = nwbfile.stimulus_template[name]
-            stimulus_index = session_object.stimulus_index[session_object.stimulus_index['image_set'] == nwb_template.name]
-            nwb.add_stimulus_index(nwbfile, stimulus_index, nwb_template)
+        #     # Add index for this template to NWB in-memory object:
+        #     nwb_template = nwbfile.stimulus_template[name]
+        #     stimulus_index = session_object.stimulus_index[session_object.stimulus_index['image_set'] == nwb_template.name]
+        #     nwb.add_stimulus_index(nwbfile, stimulus_index, nwb_template)
 
-        # Add stimulus presentations data to NWB in-memory object:
-        nwb.add_stimulus_presentations(nwbfile, session_object.stimulus_presentations)
+        # # Add stimulus presentations data to NWB in-memory object:
+        # nwb.add_stimulus_presentations(nwbfile, session_object.stimulus_presentations)
 
-        # Add trials data to NWB in-memory object:
-        nwb.add_trials(nwbfile, session_object.trials, TRIAL_COLUMN_DESCRIPTION_DICT)
+        # # Add trials data to NWB in-memory object:
+        # nwb.add_trials(nwbfile, session_object.trials, TRIAL_COLUMN_DESCRIPTION_DICT)
 
-        # Add licks data to NWB in-memory object:
-        nwb.add_licks(nwbfile, session_object.licks)
+        # # Add licks data to NWB in-memory object:
+        # nwb.add_licks(nwbfile, session_object.licks)
 
-        # Add rewards data to NWB in-memory object:
-        nwb.add_rewards(nwbfile, session_object.rewards)
+        # # Add rewards data to NWB in-memory object:
+        # nwb.add_rewards(nwbfile, session_object.rewards)
 
-        # Add max_projection image data to NWB in-memory object:
-        nwb.add_max_projection(nwbfile, session_object.max_projection)
+        # # Add max_projection image data to NWB in-memory object:
+        # nwb.add_max_projection(nwbfile, session_object.max_projection)
+
+        # # Add average_image image data to NWB in-memory object:
+        # nwb.add_average_image(nwbfile, session_object.average_image)
 
         # Add average_image image data to NWB in-memory object:
-        nwb.add_average_image(nwbfile, session_object.average_image)
+        nwb.add_metadata(nwbfile, session_object.metadata)
 
         # Write the file:
         with NWBHDF5IO(self.path, 'w') as nwb_file_writer:

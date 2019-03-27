@@ -304,3 +304,51 @@ def add_stimulus_index(nwbfile, stimulus_index, nwb_template):
         indexed_timeseries=nwb_template,
         timestamps=stimulus_index.index.values)
     nwbfile.add_stimulus(image_index)
+
+from pynwb import get_type_map, TimeSeries, NWBFile, register_class, docval, load_namespaces, popargs
+from pynwb.spec import NWBNamespaceBuilder, NWBGroupSpec, NWBAttributeSpec, NWBDatasetSpec
+from pynwb.file import LabMetaData
+import os
+
+prefix = 'AIBS_behavior'
+ext_source = '%s_extension1.yaml' % prefix
+ns_path = '%s_namespace1.yaml' % prefix
+tempdir = '/home/nicholasc/projects/allensdk'
+
+ns_builder = NWBNamespaceBuilder('Extension AIBS Visual Behavior Lab Metadata', prefix)
+test_meta_ext = NWBGroupSpec(
+    neurodata_type_def='BehaviorMetaData',
+    neurodata_type_inc='LabMetaData',
+    doc='my test meta data',
+    attributes=[
+        NWBAttributeSpec(name='test_attr', dtype='float', doc='test_dtype')])
+ns_builder.add_spec(ext_source, test_meta_ext)
+ns_builder.export(ns_path, outdir=tempdir)
+ns_abs_path = os.path.join(tempdir, ns_path)
+
+load_namespaces(ns_abs_path)
+
+@register_class('BehaviorMetaData', prefix)
+class MyTestMetaData(LabMetaData):
+    __nwbfields__ = ('test_attr',)
+
+    @docval({'name': 'name', 'type': str, 'doc': 'name'},
+            {'name': 'test_attr', 'type': float, 'doc': 'test attribute'})
+    def __init__(self, **kwargs):
+        test_attr = popargs('test_attr', kwargs)
+        super(MyTestMetaData, self).__init__(**kwargs)
+        self.test_attr = test_attr
+
+
+def add_metadata(nwbfile, metadata):
+
+    # print(nwbfile.add_lab_meta_data(metadata))
+
+    nwbfile.add_lab_meta_data(MyTestMetaData(name='test_name', test_attr=5.))
+
+    # from pynwb.file import LabMetaData
+
+    # lmd = LabMetaData(name='HW')
+    # print(lmd.keys())
+
+    # raise
